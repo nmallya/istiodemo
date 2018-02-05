@@ -5,6 +5,7 @@ var async = require('async');
 
 
 /* GET home page. */
+// TODO: error handling needs to be done when the fetch fails
 router.get('/pet/:id', function(req, res, next) {
   async.parallel([
     function(callback) {
@@ -20,12 +21,8 @@ router.get('/pet/:id', function(req, res, next) {
         ;
     }
 ], function(err, results) {
-    // results now equals to: [one: 'abc\n', two: 'xyz\n']
-    // console.log(results);
     res.json({petDetails: JSON.parse(results[0]), petMedicalHistory: JSON.parse(results[1])});
 });
-    // res.json({petDetails: 'Maximus', petMedicalHistory: 'Maximus medical history'});
-
 });
 
 
