@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: petdetailsservice
+  labels:
+    app: petdetailsservice
+spec:
+  ports:
+  - port: 9081
+    name: http
+  selector:
+    app: petdetailsservice
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: petdetailsservice-v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: petdetailsservice
+        version: v1
+    spec:
+      containers:
+      - name: petdetailsservice
+        image: gcr.io/nithinistioproject/petdetailsservice:feb4v1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9081
+---
+
+###########################################################################
+# Ingress resource (gateway)
+##########################################################################
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: gateway-petdetails
+  annotations:
+    kubernetes.io/ingress.class: "istio"
+spec:
+  backend:
+    serviceName: petdetailsservice
+    servicePort: 9081
+---

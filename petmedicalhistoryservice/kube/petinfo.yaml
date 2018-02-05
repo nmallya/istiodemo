@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: petmedicalhistoryservice
+  labels:
+    app: petmedicalhistoryservice
+spec:
+  ports:
+  - port: 9082
+    name: http
+  selector:
+    app: petmedicalhistoryservice
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: petmedicalhistoryservice-v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: petmedicalhistoryservice
+        version: v1
+    spec:
+      containers:
+      - name: petmedicalhistoryservice
+        image: gcr.io/nithinistioproject/petmedicalhistoryservice:feb4v1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9082
+---
