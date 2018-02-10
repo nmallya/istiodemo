@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 export PROJECT=nithinistioproject
-export CONTAINER_VERSION=feb4v2
+export CONTAINER_VERSION=feb10v2
 export IMAGE=gcr.io/$PROJECT/petservice:$CONTAINER_VERSION
 export BUILD_HOME=.
 
