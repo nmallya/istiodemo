@@ -1,35 +1,29 @@
 var fetch = require('node-fetch')
 
-function getResponse(url) {
-  return new Promise((resolve, reject) => {
-    fetch(url)
-      .then(response => {
-        response.json().then(json => {
-          resolve(JSON.stringify(json));
-        });
-      })
-      .catch(error => {
-        reject(error);
-      });
-  })
+async function getPetInfo(petId) {
+  let results = [];
+
+  //TODO: use petId in the below URLs
+  let petDetailsResponse = await fetch('http://localhost:9081/pet/123/details');
+  let petDetails = await petDetailsResponse.json();
+
+  let petMedicalHistoryResponse = await fetch('http://localhost:9082/pet/123/medicalhistory');
+  let petMedicalDetails = await petMedicalHistoryResponse.json();
+  results.push(petDetails);
+  results.push(petMedicalDetails);
+
+  try {
+    let dogInfo = await fetch('https://api.thedogapi.co.uk/v2/dog.php');
+    let dogInfoDetails = await dogInfo.json();
+    results.push(dogInfoDetails);
+  }
+  catch (error){
+    results.push(error);
+  }
+  return results;
 }
 
-
-
-async function addAll(){
-  let allServiceResponse = [];
-  allServiceResponse.push(await getResponse('http://services.groupkt.com/country/get/iso2code/US'));
-  allServiceResponse.push(await getResponse('http://services.groupkt.com/country/get/iso2code/IN'));
-  console.log(JSON.parse(allServiceResponse[0]));
-  console.log(JSON.parse(allServiceResponse[1]));
-}
-
-
-addAll();
-
-
-// console.log(
-//   `City: ${json.results[0].formatted_address} -`,
-//   `Latitude: ${json.results[0].geometry.location.lat} -`,
-//   `Longitude: ${json.results[0].geometry.location.lng}`
-// );
+getPetInfo(123).then( results => {
+  console.log(results);
+  // {petDetails: results[0], petMedicalHistory: results[1], petImageURL: results[2].data[0].url});
+});

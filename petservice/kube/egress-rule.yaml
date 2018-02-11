@@ -1,0 +1,15 @@
+cat <<EOF | istioctl create -f -
+apiVersion: config.istio.io/v1alpha2
+kind: EgressRule
+metadata:
+  name: dogapi-egress-rule
+spec:
+  destination:
+    service: api.thedogapi.co.uk
+  ports:
+    - port: 443
+      protocol: https
+EOF
+
+
+# kubectl exec -it $(kubectl get pod -l app=petservice -o jsonpath={.items..metadata.name}) -c petservice bash

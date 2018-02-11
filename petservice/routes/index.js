@@ -4,43 +4,6 @@ var router = express.Router();
 var async = require('async');
 
 
-/* GET home page. */
-// // TODO: error handling needs to be done when the fetch fails
-// router.get('/pet/:id', function(req, res, next) {
-//   async.parallel([
-//     function(callback) {
-//       fetch('http://petdetailsservice:9081/pet/123/details')
-//           .then(res => res.text())
-//           .then(body => callback(null, body));
-//         ;
-//     },
-//     function(callback) {
-//       fetch('http://petmedicalhistoryservice:9082/pet/123/medicalhistory')
-//           .then(res => res.text())
-//           .then(body => callback(null, body));
-//         ;
-//     }
-// ], function(err, results) {
-//     res.json({petDetails: JSON.parse(results[0]), petMedicalHistory: JSON.parse(results[1])});
-// });
-// });
-
-
-// function getResponse(url) {
-//   console.log('Connecting to url ' + url);
-//   return new Promise((resolve, reject) => {
-//     fetch(url)
-//       .then(response => {
-//         response.json().then(json => {
-//           resolve(JSON.stringify(json));
-//         });
-//       })
-//       .catch(error => {
-//         reject(error);
-//       });
-//   });
-// }
-
 
 async function getPetInfo(petId) {
   let results = [];
@@ -54,12 +17,21 @@ async function getPetInfo(petId) {
 
   results.push(petDetails);
   results.push(petMedicalDetails);
+
+  try {
+    let dogInfo = await fetch('http://api.thedogapi.co.uk:443/v2/dog.php');
+    let dogInfoDetails = await dogInfo.json();
+    results.push(dogInfoDetails);
+  }
+  catch (error){
+    results.push(error);
+  }
   return results;
 }
 
 router.get('/pet/:id', function(req, res, next) {
   getPetInfo(req.query.id).then( results => {
-    res.json({petDetails: results[0], petMedicalHistory: results[1]});
+    res.json({petDetails: results[0], petMedicalHistory: results[1], dogAPIResponse: results[2]});
   });
 });
 
