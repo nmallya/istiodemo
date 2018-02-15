@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: petservice
-        image: gcr.io/nithinistioproject/petservice:feb10v11
+        image: gcr.io/nithinistioproject/petservice:feb13v1
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080

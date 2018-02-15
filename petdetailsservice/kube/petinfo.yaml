@@ -25,11 +25,32 @@ spec:
     spec:
       containers:
       - name: petdetailsservice
-        image: gcr.io/nithinistioproject/petdetailsservice:feb4v1
+        image: gcr.io/nithinistioproject/petdetailsservice:feb13v1
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9081
 ---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: petdetailsservice-v2
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: petdetailsservice
+        version: v2
+    spec:
+      containers:
+      - name: petdetailsservice
+        image: gcr.io/nithinistioproject/petdetailsservice:feb15v1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9081
+---
+
 
 ###########################################################################
 # Ingress resource (gateway)
